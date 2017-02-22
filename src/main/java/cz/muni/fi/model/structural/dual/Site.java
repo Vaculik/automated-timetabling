@@ -11,7 +11,12 @@ public class Site {
     private GeographicCoordinates coordinates;
     private List<Arm> arms;
 
-    public Site(long id, GeographicCoordinates coordinates, List<Arm> arms) {
+    public Site(GeographicCoordinates coordinates) {
+        this.coordinates = coordinates;
+        this.arms = new ArrayList<>();
+    }
+
+    public Site(GeographicCoordinates coordinates, List<Arm> arms) {
         this.coordinates = coordinates;
         this.arms = new ArrayList<>(arms);
     }
@@ -22,5 +27,9 @@ public class Site {
 
     public List<Arm> getArms() {
         return Collections.unmodifiableList(arms);
+    }
+
+    public void setArms(List<Arm> arms) {
+        this.arms = new ArrayList<>(arms);
     }
 }

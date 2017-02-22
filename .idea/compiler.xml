@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="automated-timetabling" target="1.5" />
+      <module name="automated-timetabling" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
