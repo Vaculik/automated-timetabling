@@ -23,7 +23,7 @@ public class PrimalGraph {
             throw new NullPointerException("Parameter links is null.");
         }
         this.nodes = new HashMap<>(nodes);
-        this.links = new TreeSet<>(links);
+        this.links = new HashSet<>(links);
     }
 
     public void addNode(Node node) {

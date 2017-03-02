@@ -1,10 +1,7 @@
 package cz.muni.fi.model.structural.primal;
 
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Created by vacullik on 09/02/2017.
@@ -16,7 +13,7 @@ public class Node {
 
     public Node(long key) {
         this.key = key;
-        this.adjacentLinks = new TreeSet<>();
+        this.adjacentLinks = new HashSet<>();
     }
 
     public Node(long key, Set<Link> adjacentLinks) {
@@ -24,7 +21,7 @@ public class Node {
             throw new NullPointerException("Parameter adjacentLinks is null.");
         }
         this.key = key;
-        this.adjacentLinks = new TreeSet<>(adjacentLinks);
+        this.adjacentLinks = new HashSet<>(adjacentLinks);
     }
 
     public long getKey() {
