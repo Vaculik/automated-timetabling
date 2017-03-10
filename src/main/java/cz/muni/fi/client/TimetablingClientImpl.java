@@ -13,9 +13,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by vacullik on 22/02/2017.
- */
 public class TimetablingClientImpl implements TimetablingClient {
     private String apiKey;
     private static String url = "http://129.34.40.6";

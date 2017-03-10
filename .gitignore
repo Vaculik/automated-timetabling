@@ -1,0 +1,12 @@
+# Ignore IntelliJ Idea files
+.idea
+*.iml
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Compiled files
+*.class
+target/

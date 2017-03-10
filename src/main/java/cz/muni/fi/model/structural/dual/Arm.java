@@ -1,8 +1,5 @@
 package cz.muni.fi.model.structural.dual;
 
-/**
- * Created by vacullik on 09/02/2017.
- */
 public class Arm {
 
     private int armAngle;
