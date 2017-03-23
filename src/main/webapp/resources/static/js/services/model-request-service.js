@@ -11,6 +11,16 @@ app.service('ModelRequestService', [
             return processRequest('GET', relativeUrl);
         };
 
+        service.getAllRoutes = function() {
+            let relativeUrl = '/routes';
+            return processRequest('GET', relativeUrl);
+        };
+
+        service.getBusExample = function() {
+            let relativeUrl = '/bus-example';
+            return processRequest('GET', relativeUrl);
+        };
+
 
         /**
          * Send an asynchronous HTTP request to the API.

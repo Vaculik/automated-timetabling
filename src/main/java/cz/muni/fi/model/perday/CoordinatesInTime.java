@@ -11,8 +11,9 @@ import java.util.Date;
 public class CoordinatesInTime {
     private GeographicCoordinates coordinates;
     private LocalTime time;
+    private int sequence;
 
-    public CoordinatesInTime(GeographicCoordinates coordinates, LocalTime time) {
+    public CoordinatesInTime(GeographicCoordinates coordinates, LocalTime time, int sequence) {
         this.coordinates = coordinates;
         this.time = time;
     }
@@ -23,5 +24,9 @@ public class CoordinatesInTime {
 
     public LocalTime getTime() {
         return time;
+    }
+
+    public int getSequence() {
+        return sequence;
     }
 }

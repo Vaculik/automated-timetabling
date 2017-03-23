@@ -28,6 +28,10 @@
     <script src="../resources/static/js/services/map-service.js"></script>
     <script src="../resources/static/js/services/model-request-service.js"></script>
     <script src="../resources/static/js/services/model-service.js"></script>
+    <script src="../resources/static/js/utilities/graphic/point.js"></script>
+    <script src="../resources/static/js/utilities/graphic/vector.js"></script>
+    <script src="../resources/static/lib/sockjs.min.js"></script>
+    <script src="../resources/static/lib/stomp.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
 
     <link rel="stylesheet" href="./webjars/bootstrap/3.3.6/css/bootstrap.css">

@@ -10,18 +10,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-/**
- * Created by vacullik on 22/02/2017.
- */
+
 public class JsonParserImpl implements JsonParser {
     private StructuralModelParser structuralModelParser;
+    private RouteModelParser routeModelParser;
 
     public JsonParserImpl(InputStream inputStream) throws IOException {
         if (inputStream == null) {
             throw new NullPointerException("Parameter inputStream is null");
         }
         JSONObject json = getJsonObject(inputStream);
-        this.structuralModelParser = new StructuralModelParser(json);
+        this.structuralModelParser = new StructuralModelParserImpl(json);
+        this.routeModelParser = new RouteModelParserImpl(json);
     }
 
     private JSONObject getJsonObject(InputStream is) throws IOException {
@@ -45,7 +45,7 @@ public class JsonParserImpl implements JsonParser {
 
     @Override
     public RouteModel parseRouteModel() {
-        return null;
+        return routeModelParser.parseRouteModel();
     }
 
     @Override

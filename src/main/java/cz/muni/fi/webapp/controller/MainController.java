@@ -1,6 +1,7 @@
 package cz.muni.fi.webapp.controller;
 
 import cz.muni.fi.TimetablingApp;
+import cz.muni.fi.webapp.websocket.RefreshWebSocketController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

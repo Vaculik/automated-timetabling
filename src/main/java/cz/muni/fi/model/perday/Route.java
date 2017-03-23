@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by vacullik on 20/02/2017.
- */
+
 public class Route {
     private String id;
     private List<Long> osmStopIds;

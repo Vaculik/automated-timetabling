@@ -1,11 +1,14 @@
 
 app.service('ModelService', [
     'ModelRequestService',
-    function(ModelRequestService) {
+    'MapService',
+    function(ModelRequestService,
+             MapService) {
         'use strict';
 
         let service = this;
         let sites = null;
+        let routes = null;
 
         service.getAllSites = function() {
             if (sites) {
@@ -16,6 +19,23 @@ app.service('ModelService', [
                     return response.data;
                 });
             }
-        }
+        };
+
+        service.getAllRoutes = function() {
+            if (routes) {
+                return new Promise((resolve, reject) => resolve(routes));
+            } else {
+                return ModelRequestService.getAllRoutes().then((response) => {
+                    routes = response.data;
+                    return response.data;
+                })
+            }
+        };
+
+        service.drawBusExample = function() {
+            ModelRequestService.getBusExample().then((response) => {
+                MapService.drawBus(response.data);
+            });
+        };
     }
 ]);

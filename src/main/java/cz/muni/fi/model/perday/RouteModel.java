@@ -1,11 +1,10 @@
 package cz.muni.fi.model.perday;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by vacullik on 22/02/2017.
- */
+
 public class RouteModel {
     private List<Route> routes;
     private List<Trip> trips;
@@ -17,6 +16,8 @@ public class RouteModel {
         if (trips == null) {
             throw new NullPointerException("Parameter trips is null.");
         }
+        this.routes = new ArrayList<>(routes);
+        this.trips = new ArrayList<>(trips);
     }
 
     public List<Route> getRoutes() {

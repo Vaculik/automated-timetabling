@@ -19,16 +19,26 @@ public class ModelDaoImpl implements ModelDao {
     private TrafficModel trafficModel;
 
     public ModelDaoImpl() {
-        InputStream staticData;
-        StructuralModel model = null;
+        InputStream data;
+        StructuralModel structuralModel = null;
         try {
-            staticData = new FileInputStream("data/static/static_data.json");
-            JsonParser jsonParser = new JsonParserImpl(staticData);
-            model = jsonParser.parseStructuralModel();
+            data = new FileInputStream("data/static/static_data.json");
+            JsonParser jsonParser = new JsonParserImpl(data);
+            structuralModel = jsonParser.parseStructuralModel();
         } catch (IOException | NullPointerException e) {
             e.printStackTrace();
         }
-        this.structuralModel = model;
+        this.structuralModel = structuralModel;
+
+        RouteModel routeModel = null;
+        try {
+            data = new FileInputStream("data/route/2017-02-01.json");
+            JsonParser jsonParser = new JsonParserImpl(data);
+            routeModel = jsonParser.parseRouteModel();
+        } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+        }
+        this.routeModel = routeModel;
     }
 
     @Override

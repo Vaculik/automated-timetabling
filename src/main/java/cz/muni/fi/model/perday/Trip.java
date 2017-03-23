@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by vacullik on 20/02/2017.
- */
 public class Trip {
     private String id;
     private int directionId;
@@ -77,5 +74,9 @@ public class Trip {
 
     public List<CoordinatesInTime> getTimetable() {
         return Collections.unmodifiableList(timetable);
+    }
+
+    public void setTimetable(List<CoordinatesInTime> timetable) {
+        this.timetable = timetable;
     }
 }
