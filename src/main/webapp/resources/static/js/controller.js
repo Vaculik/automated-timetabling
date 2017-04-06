@@ -20,7 +20,11 @@ app.controller('appController', [
             $scope.sitesVisible = !$scope.sitesVisible;
             if ($scope.sitesVisible) {
                 ModelService.getAllSites().then((sites) => {
-                    MapService.showSites(sites, {withArms: $scope.armsVisible});
+                    let options = {
+                        withArms: $scope.armsVisible,
+                        withEdges: $scope.edgesVisible,
+                    };
+                    MapService.showSites(sites, options);
                 });
             } else {
                 MapService.hideSites();
@@ -44,6 +48,15 @@ app.controller('appController', [
                 MapService.showArms();
             } else {
                 MapService.hideArms();
+            }
+        };
+
+        $scope.toggleEdgesVisibility = function() {
+            $scope.edgesVisible = !$scope.edgesVisible;
+            if ($scope.edgesVisible) {
+                MapService.showEdges();
+            } else {
+                MapService.hideEdges();
             }
         };
 

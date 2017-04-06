@@ -5,6 +5,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
@@ -25,7 +26,7 @@ public class TimetablingClientImpl implements TimetablingClient {
 
     @Override
     public InputStream getUpdate() throws IOException {
-        HttpResponse response = executePostRequest("/getUpdate");
+        HttpResponse response = executeGetRequest("/getUpdate");
 
         // TO DELETE - debug information
         printDebugInfo(response);
@@ -43,7 +44,7 @@ public class TimetablingClientImpl implements TimetablingClient {
 
     @Override
     public InputStream getEvaluation() throws IOException {
-        HttpResponse response = executePostRequest("/getEvaluation");
+        HttpResponse response = executeGetRequest("/getEvaluation");
 
         // TO DELETE - debug information
         printDebugInfo(response);
@@ -51,15 +52,13 @@ public class TimetablingClientImpl implements TimetablingClient {
         return response.getEntity().getContent();
     }
 
-    private HttpResponse executePostRequest(String urlSuffix) throws IOException {
-        String fullUrl = getFullUrl(urlSuffix);
+    private HttpResponse executeGetRequest(String urlSuffix) throws IOException {
+        String fullUrl = getFullUrlWithApiKey(urlSuffix);
         HttpClient client = HttpClients.createDefault();
-        HttpPost request = new HttpPost(fullUrl);
-        HttpEntity entity = createHttpEntityWithApiKey();
-        request.setEntity(entity);
+        HttpGet request = new HttpGet(fullUrl);
 
         // TO DELETE - debug information
-        printDebugInfo(request);
+        System.out.println("\nSending 'GET' request to URL : " + fullUrl);
 
         return client.execute(request);
     }
@@ -74,8 +73,8 @@ public class TimetablingClientImpl implements TimetablingClient {
         return new UrlEncodedFormEntity(content);
     }
 
-    private String getFullUrl(String urlSuffix) {
-        return url + ':' + port + urlSuffix;
+    private String getFullUrlWithApiKey(String urlSuffix) {
+        return url + ':' + port + urlSuffix + "?apiKey=" + this.apiKey;
     }
 
     private void printDebugInfo(HttpPost request) throws IOException {
@@ -91,6 +90,10 @@ public class TimetablingClientImpl implements TimetablingClient {
         }
         result.append(System.lineSeparator());
         System.out.println("Post content : " + result.toString());
+    }
+
+    private void printDebugInfo(HttpGet request) throws IOException {
+
     }
 
     private void printDebugInfo(HttpResponse response) throws IOException {

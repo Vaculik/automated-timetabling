@@ -2,9 +2,7 @@ package cz.muni.fi.dto;
 
 import cz.muni.fi.model.structural.dual.GeographicCoordinates;
 
-/**
- * Created by vacullik on 23/03/2017.
- */
+
 public class BusExample {
     private GeographicCoordinates coordinates;
     private static final double shift = 0.0002;

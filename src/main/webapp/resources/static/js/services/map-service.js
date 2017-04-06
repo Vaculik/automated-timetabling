@@ -2,8 +2,10 @@
 app.service('MapService', [
     'Point',
     'Vector',
+    'ModelService',
     function(Point,
-             Vector) {
+             Vector,
+             ModelService) {
         'use strict';
 
         const mapId = 'leaflet-map';
@@ -18,45 +20,51 @@ app.service('MapService', [
         let service = this;
         let leafletMap;
         let arrowTailPointDist = arrowHeadPointDist + arrowLength;
-        let sitesOnMap = [];
-        let routesOnMap = [];
+        let leafletSites = [];
+        let leafletRoutes = [];
+        let leafletEdges = [];
+        let edgesMap = new Map();
 
         let busExampleOnMap = null;
 
         service.showSites = function(sites, options) {
-            let {withArms} = options;
+            let {withArms, withEdges} = options;
             for (let site of sites) {
                 let siteLayer = paintSite(site);
                 siteLayer.site = site;
                 siteLayer.on('click', () => clickOnSite(siteLayer));
-                sitesOnMap.push(siteLayer);
+                leafletSites.push(siteLayer);
                 if (withArms) {
                     siteLayer.arrowsOnMap = paintArms(site);
                 }
             }
+            if (withEdges) {
+                service.showEdges();
+            }
         };
 
         service.hideSites = function() {
-            for (let site of sitesOnMap) {
+            for (let site of leafletSites) {
                 if (site.arrowsOnMap) {
                     removePaintedItems(site.arrowsOnMap);
                 }
             }
-            removePaintedItems(sitesOnMap);
+            removePaintedItems(leafletSites);
+            service.hideEdges();
         };
 
         service.showRoutes = function(routes) {
             for (let route of routes) {
-                routesOnMap.push(paintRoute(route));
+                leafletRoutes.push(paintRoute(route));
             }
         };
 
         service.hideRoutes = function() {
-            removePaintedItems(routesOnMap);
+            removePaintedItems(leafletRoutes);
         };
 
         service.showArms = function() {
-            for (let siteLayer of sitesOnMap) {
+            for (let siteLayer of leafletSites) {
                 if (!siteLayer.arrowsOnMap) {
                     siteLayer.arrowsOnMap = paintArms(siteLayer.site);
                 }
@@ -64,7 +72,7 @@ app.service('MapService', [
         };
 
         service.hideArms = function() {
-            for (let siteLayer of sitesOnMap) {
+            for (let siteLayer of leafletSites) {
                 if (siteLayer.arrowsOnMap) {
                     removePaintedItems(siteLayer.arrowsOnMap);
                     siteLayer.arrowsOnMap = null;
@@ -82,6 +90,19 @@ app.service('MapService', [
                 leafletMap.removeLayer(busExampleOnMap);
                 busExampleOnMap = null;
             }
+        };
+
+        service.showEdges = function() {
+            ModelService.getSitesMap().then((sitesMap) => {
+                for (let siteLayer of leafletSites) {
+                    paintEdges(siteLayer.site, sitesMap);
+                }
+            });
+        };
+
+        service.hideEdges = function() {
+            removePaintedItems(leafletEdges);
+            edgesMap.clear();
         };
 
         service.init = function() {
@@ -133,47 +154,114 @@ app.service('MapService', [
         }
 
         function paintArms(site) {
-            let arrowsOnMap = [];
+            let paintedArms = [];
             for (let arm of site.arms) {
-                let armArrow = makeArmArrow(site.coordinates, arm.armAngle);
-                arrowsOnMap.push(paintArmArrow(armArrow));
+                let armArrow = getArmLineCoords(site.coordinates, arm.armAngle);
+                let paintedArrow = paintArmLine(armArrow);
+                paintedArrow.bindPopup(arm.streetName);
+                paintedArms.push(paintedArrow);
             }
-            return arrowsOnMap;
+            return paintedArms;
         }
 
-        function paintArmArrow(arrow) {
+        function paintEdges(site, sitesMap) {
+            let relevantArms = site.arms.filter((arm) => arm.nextSiteId);
+            for (let arm of relevantArms) {
+                if (isEdgePainted(site.id, arm.nextSiteId) || !sitesMap.has(arm.nextSiteId)) {
+                    continue;
+                }
+                let targetSite = sitesMap.get(arm.nextSiteId);
+                let edgeCoords = getEdgeCoords(site, arm, targetSite);
+                if (edgeCoords) {
+                    leafletEdges.push(paintOneEdge(edgeCoords));
+                    addEdgeToMap(site.id, targetSite.id);
+                }
+            }
+        }
+
+        function paintOneEdge(edgeCoords) {
             let coords = [];
-            coords.push(arrow.sidePoints[0].getArrayCoords());
-            coords.push(arrow.headPoint.getArrayCoords());
-            coords.push(arrow.tailPoint.getArrayCoords());
-            coords.push(arrow.headPoint.getArrayCoords());
-            coords.push(arrow.sidePoints[1].getArrayCoords());
+            coords.push(edgeCoords.fromPoint.getArrayCoords());
+            coords.push(edgeCoords.toPoint.getArrayCoords());
             return L.polyline(coords, {
-                color: 'green'
+                color: 'yellow',
+                weight: 5,
             }).addTo(leafletMap);
         }
 
-        function makeArmArrow(coordinates, angle) {
+        function addEdgeToMap(key, targetSiteId) {
+            if (edgesMap.has(key)) {
+                edgesMap.get(key).push(targetSiteId);
+            } else {
+                edgesMap.set(key, [targetSiteId]);
+            }
+        }
+
+        function getEdgeCoords(fromSite, arm, targetSite) {
+            let appropriateArm = targetSite.arms.find((arm) => arm.nextSiteId === fromSite.id);
+            let fromPoint = getArmPoint(fromSite, arm);
+            if (appropriateArm) {
+                return {
+                    fromPoint: fromPoint,
+                    toPoint: getArmPoint(targetSite, appropriateArm),
+                };
+            } else {
+                console.log('Appropriate arm not found.');
+                return {
+                    fromPoint: fromPoint,
+                    toPoint: new Point(targetSite.coordinates.latitude, targetSite.coordinates.longitude),
+                };
+            }
+        }
+
+        function getArmPoint(site, arm) {
+            let sitePoint = new Point(site.coordinates.latitude, site.coordinates.longitude);
+            let radianAngle = arm.armAngle * Math.PI / 180;
+            return calculateArmHeadPoint(sitePoint, radianAngle);
+        }
+
+        function isEdgePainted(fromSiteId, toSiteId) {
+            return isEdgeInMap(fromSiteId, toSiteId) || isEdgeInMap(toSiteId, fromSiteId);
+        }
+
+        function isEdgeInMap(keyId, targetId) {
+            if (edgesMap.has(keyId)) {
+                let targetIds = edgesMap.get(keyId);
+                return targetIds.some((id) => id === targetId);
+            }
+            return false;
+        }
+
+        function paintArmLine(armCoords) {
+            let coords = [];
+            coords.push(armCoords.headPoint.getArrayCoords());
+            coords.push(armCoords.tailPoint.getArrayCoords());
+            return L.polyline(coords, {
+                color: 'green',
+                weight: 5,
+            }).addTo(leafletMap);
+        }
+
+        function getArmLineCoords(coordinates, angle) {
             let radianAngle = angle * Math.PI / 180;
             let basePoint = new Point(coordinates.latitude, coordinates.longitude);
-            let headPoint = calculateArrowHeadPoint(basePoint, radianAngle);
-            let tailPoint = calculateArrowTailPoint(basePoint, radianAngle);
+            let headPoint = calculateArmHeadPoint(basePoint, radianAngle);
+            let tailPoint = calculateArmTailPoint(basePoint, radianAngle);
             return {
                 headPoint: headPoint,
                 tailPoint: tailPoint,
-                sidePoints: calculateArrowSidePoints(headPoint, tailPoint),
             };
         }
 
-        function calculateArrowHeadPoint(basePoint, radianAngle) {
-            let y = arrowHeadPointDist * Math.cos(radianAngle);
+        function calculateArmHeadPoint(basePoint, radianAngle) {
+            let y = -arrowHeadPointDist * Math.cos(radianAngle);
             let x = arrowHeadPointDist * Math.sin(radianAngle);
             let shiftPoint = new Point(x, y*latLonRate);
             return basePoint.add(shiftPoint);
         }
 
-        function calculateArrowTailPoint(basePoint, radianAngle) {
-            let y = arrowTailPointDist * Math.cos(radianAngle);
+        function calculateArmTailPoint(basePoint, radianAngle) {
+            let y = -arrowTailPointDist * Math.cos(radianAngle);
             let x = arrowTailPointDist * Math.sin(radianAngle);
             let shiftPoint = new Point(x, y*latLonRate);
             return basePoint.add(shiftPoint);

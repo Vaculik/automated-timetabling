@@ -45,11 +45,17 @@ public class ModelServiceImpl implements ModelService {
 
     private SiteDto makeSiteDtoFromSite(Site site) {
         SiteDto siteDto = new SiteDto();
+        siteDto.setId(site.getId());
         siteDto.setCoordinates(site.getCoordinates());
         List<ArmDto> armDtos = new ArrayList<>();
         for (Arm arm : site.getArms()) {
             ArmDto armDto = new ArmDto();
             armDto.setArmAngle(arm.getArmAngle());
+            armDto.setStreetName(arm.getStreetName());
+            Site nextSite = arm.getNextSite();
+            if (nextSite != null) {
+                armDto.setNextSiteId(arm.getNextSite().getId());
+            }
             armDtos.add(armDto);
         }
         siteDto.setArms(armDtos);

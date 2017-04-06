@@ -6,8 +6,17 @@ import cz.muni.fi.model.structural.dual.GeographicCoordinates;
 import java.util.List;
 
 public class SiteDto {
+    private int id;
     private GeographicCoordinates coordinates;
     private List<ArmDto> arms;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public GeographicCoordinates getCoordinates() {
         return coordinates;

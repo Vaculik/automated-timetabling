@@ -8,17 +8,22 @@ import java.util.List;
  * Created by vacullik on 20/02/2017.
  */
 public class Site {
+    private int id;
     private GeographicCoordinates coordinates;
     private List<Arm> arms;
 
-    public Site(GeographicCoordinates coordinates) {
-        this.coordinates = coordinates;
-        this.arms = new ArrayList<>();
+    public Site(int id, GeographicCoordinates coordinates) {
+        this(id, coordinates, new ArrayList<>());
     }
 
-    public Site(GeographicCoordinates coordinates, List<Arm> arms) {
+    public Site(int id, GeographicCoordinates coordinates, List<Arm> arms) {
+        this.id = id;
         this.coordinates = coordinates;
         this.arms = new ArrayList<>(arms);
+    }
+
+    public int getId() {
+        return this.id;
     }
 
     public GeographicCoordinates getCoordinates() {

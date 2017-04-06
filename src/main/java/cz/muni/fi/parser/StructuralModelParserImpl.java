@@ -79,8 +79,9 @@ public class StructuralModelParserImpl implements StructuralModelParser {
     private Map<Long, Site> parseSitesOfDualGraph(JSONObject dualGraphJson) {
         Map<Long, Site> resultSites = new HashMap<>();
         for (String key : dualGraphJson.keySet()) {
+            int siteId = Integer.parseInt(key);
             JSONObject siteJson = dualGraphJson.getJSONObject(key);
-            Site site = parseSiteWithoutArms(siteJson);
+            Site site = parseSiteWithoutArms(siteId, siteJson);
             resultSites.put(Long.parseLong(key), site);
         }
         for (Map.Entry<Long, Site> entry : resultSites.entrySet()) {
@@ -92,11 +93,11 @@ public class StructuralModelParserImpl implements StructuralModelParser {
         return resultSites;
     }
 
-    private Site parseSiteWithoutArms(JSONObject siteJson) {
+    private Site parseSiteWithoutArms(int siteId, JSONObject siteJson) {
         double latitude = siteJson.getDouble("latitude");
         double longitude = siteJson.getDouble("longitude");
         GeographicCoordinates coordinates = new GeographicCoordinates(latitude, longitude);
-        return new Site(coordinates);
+        return new Site(siteId, coordinates);
     }
 
     private List<Arm> parseSiteArms(JSONArray armsArrayJson, Map<Long, Site> sites) {
