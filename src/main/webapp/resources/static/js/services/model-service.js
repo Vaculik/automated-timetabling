@@ -36,7 +36,7 @@ app.service('ModelService', [
                 return ModelRequestService.getAllRoutes().then((response) => {
                     routes = response.data;
                     return response.data;
-                })
+                });
             }
         };
 
@@ -44,6 +44,12 @@ app.service('ModelService', [
             // ModelRequestService.getBusExample().then((response) => {
             //     MapService.drawBus(response.data);
             // });
+        };
+
+        service.getAllBuses = function() {
+            return ModelRequestService.getAllBuses().then((response) => {
+                return response.data;
+            });
         };
     }
 ]);

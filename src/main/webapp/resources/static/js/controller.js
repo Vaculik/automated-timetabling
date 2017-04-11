@@ -13,6 +13,7 @@ app.controller('appController', [
         $scope.routesVisible = false;
         $scope.armsVisible = false;
         $scope.busVisible = false;
+        $scope.busesVisible = false;
 
         init();
 
@@ -67,6 +68,15 @@ app.controller('appController', [
             }
         };
 
+        $scope.toggleBusesVisibility = function() {
+            $scope.busesVisible = !$scope.busesVisible;
+            if ($scope.busesVisible) {
+                redrawBuses();
+            } else {
+                MapService.hideBuses();
+            }
+        };
+
         function init() {
             MapService.init();
 
@@ -77,12 +87,19 @@ app.controller('appController', [
                 });
 
                 client.subscribe('/server/refresh', function(message) {
-                    if ($scope.busVisible) {
-                        ModelService.drawBusExample();
+                    if ($scope.busesVisible) {
+                        redrawBuses();
                     }
                 });
 
                 client.send('/channel/hello', {}, 'msg');
+            });
+        }
+
+        function redrawBuses() {
+            ModelService.getAllBuses().then((buses) => {
+                MapService.hideBuses();
+                MapService.showBuses(buses);
             });
         }
     }

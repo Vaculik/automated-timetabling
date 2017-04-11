@@ -23,6 +23,7 @@ app.service('MapService', [
         let leafletSites = [];
         let leafletRoutes = [];
         let leafletEdges = [];
+        let leafletBuses = [];
         let edgesMap = new Map();
 
         let busExampleOnMap = null;
@@ -103,6 +104,16 @@ app.service('MapService', [
         service.hideEdges = function() {
             removePaintedItems(leafletEdges);
             edgesMap.clear();
+        };
+
+        service.showBuses = function(buses) {
+            for (let bus of buses) {
+                leafletBuses.push(paintBus(bus));
+            }
+        };
+
+        service.hideBuses = function() {
+            removePaintedItems(leafletBuses);
         };
 
         service.init = function() {

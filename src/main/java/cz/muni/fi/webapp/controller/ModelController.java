@@ -1,6 +1,7 @@
 package cz.muni.fi.webapp.controller;
 
 import cz.muni.fi.TimetablingApp;
+import cz.muni.fi.dto.BusDto;
 import cz.muni.fi.dto.BusExampleDto;
 import cz.muni.fi.dto.RouteDto;
 import cz.muni.fi.dto.SiteDto;
@@ -39,5 +40,8 @@ public class ModelController {
     public BusExampleDto getBusExample() {
         return this.timetablingApp.getBusExample().getDto();
     }
+
+    @RequestMapping(path = "/buses", method = RequestMethod.GET)
+    public List<BusDto> getAllBuses() { return this.modelService.getAllBuses(); }
 
 }

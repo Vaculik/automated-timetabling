@@ -2,12 +2,14 @@ package cz.muni.fi.service;
 
 
 import cz.muni.fi.dto.ArmDto;
+import cz.muni.fi.dto.BusDto;
 import cz.muni.fi.dto.RouteDto;
 import cz.muni.fi.dto.SiteDto;
 import cz.muni.fi.model.ModelDao;
 import cz.muni.fi.model.perday.CoordinatesInTime;
 import cz.muni.fi.model.perday.RouteModel;
 import cz.muni.fi.model.perday.Trip;
+import cz.muni.fi.model.perperiod.Bus;
 import cz.muni.fi.model.perperiod.TrafficModel;
 import cz.muni.fi.model.structural.dual.Arm;
 import cz.muni.fi.model.structural.dual.DualGraph;
@@ -80,5 +82,16 @@ public class ModelServiceImpl implements ModelService {
         }
         routeDto.setCoordinates(coordinates);
         return routeDto;
+    }
+
+    public List<BusDto> getAllBuses() {
+        List<BusDto> resultBuses = new ArrayList<>();
+        TrafficModel trafficModel = modelDao.getTrafficModel();
+        for (Bus bus : trafficModel.getBuses()) {
+            BusDto busDto = new BusDto();
+            busDto.setCoordinates(bus.getCoordinates());
+            resultBuses.add(busDto);
+        }
+        return resultBuses;
     }
 }
