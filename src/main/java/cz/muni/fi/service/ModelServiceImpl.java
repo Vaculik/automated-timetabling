@@ -6,13 +6,12 @@ import cz.muni.fi.dto.RouteDto;
 import cz.muni.fi.dto.SiteDto;
 import cz.muni.fi.model.ModelDao;
 import cz.muni.fi.model.perday.CoordinatesInTime;
-import cz.muni.fi.model.perday.Route;
 import cz.muni.fi.model.perday.RouteModel;
 import cz.muni.fi.model.perday.Trip;
 import cz.muni.fi.model.perperiod.TrafficModel;
 import cz.muni.fi.model.structural.dual.Arm;
 import cz.muni.fi.model.structural.dual.DualGraph;
-import cz.muni.fi.model.structural.dual.GeographicCoordinates;
+import cz.muni.fi.model.GeographicCoordinates;
 import cz.muni.fi.model.structural.dual.Site;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Component
@@ -31,7 +29,6 @@ public class ModelServiceImpl implements ModelService {
     @Autowired
     public ModelServiceImpl(ModelDao modelDao) {
         this.modelDao = modelDao;
-        this.modelDao.updateTrafficModel(new TrafficModel());
     }
 
     public List<SiteDto> getAllSites() {

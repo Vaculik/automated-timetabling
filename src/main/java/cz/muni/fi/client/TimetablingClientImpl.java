@@ -29,7 +29,7 @@ public class TimetablingClientImpl implements TimetablingClient {
         HttpResponse response = executeGetRequest("/getUpdate");
 
         // TO DELETE - debug information
-        printDebugInfo(response);
+        //printDebugInfo(response);
 
         return response.getEntity().getContent();
     }

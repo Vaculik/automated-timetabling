@@ -1,7 +1,7 @@
 package cz.muni.fi.dto;
 
 
-import cz.muni.fi.model.structural.dual.GeographicCoordinates;
+import cz.muni.fi.model.GeographicCoordinates;
 
 import java.util.List;
 

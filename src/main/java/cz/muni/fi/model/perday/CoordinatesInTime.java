@@ -1,13 +1,9 @@
 package cz.muni.fi.model.perday;
 
-import cz.muni.fi.model.structural.dual.GeographicCoordinates;
+import cz.muni.fi.model.GeographicCoordinates;
 
 import java.time.LocalTime;
-import java.util.Date;
 
-/**
- * Created by vacullik on 20/02/2017.
- */
 public class CoordinatesInTime {
     private GeographicCoordinates coordinates;
     private LocalTime time;

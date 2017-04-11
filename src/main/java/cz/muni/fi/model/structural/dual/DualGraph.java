@@ -5,9 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by vacullik on 22/02/2017.
- */
+
 public class DualGraph {
     private Map<Long, Site> sites;
 
@@ -16,6 +14,10 @@ public class DualGraph {
             throw new NullPointerException("Parameter sites is null.");
         }
         this.sites = new HashMap<>(sites);
+    }
+
+    public Site getSiteById(long siteId) {
+        return sites.get(siteId);
     }
 
     public Collection<Site> getAllSites() {

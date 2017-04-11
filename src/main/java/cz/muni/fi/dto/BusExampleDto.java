@@ -1,6 +1,6 @@
 package cz.muni.fi.dto;
 
-import cz.muni.fi.model.structural.dual.GeographicCoordinates;
+import cz.muni.fi.model.GeographicCoordinates;
 
 /**
  * Created by vacullik on 23/03/2017.

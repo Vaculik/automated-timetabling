@@ -10,15 +10,20 @@ public class Arm {
     private Site nextSite;
     private long osmWayId;
     private String streetName;
+    private int arrivalVehicles;
+    private int priorityVehicles;
+    private double priorityVehiclesRatio;
+    private int vehicles;
+    private double vehiclesRatio;
 
     public static class Builder {
         private int armAngle;
         private int armNum;
         private int armOffset;
-        private int leftLanes = 0;
-        private int rightLanes = 0;
+        private int leftLanes;
+        private int rightLanes;
         private Site nextSite;
-        private long osmWayId = 0;
+        private long osmWayId;
         private String streetName;
 
         public Builder armAngle(int val) {
@@ -107,5 +112,45 @@ public class Arm {
 
     public String getStreetName() {
         return streetName;
+    }
+
+    public int getArrivalVehicles() {
+        return arrivalVehicles;
+    }
+
+    public void setArrivalVehicles(int arrivalVehicles) {
+        this.arrivalVehicles = arrivalVehicles;
+    }
+
+    public double getPriorityVehiclesRatio() {
+        return priorityVehiclesRatio;
+    }
+
+    public void setPriorityVehiclesRatio(double priorityVehiclesRatio) {
+        this.priorityVehiclesRatio = priorityVehiclesRatio;
+    }
+
+    public double getVehiclesRatio() {
+        return vehiclesRatio;
+    }
+
+    public void setVehiclesRatio(double vehiclesRatio) {
+        this.vehiclesRatio = vehiclesRatio;
+    }
+
+    public int getPriorityVehicles() {
+        return priorityVehicles;
+    }
+
+    public void setPriorityVehicles(int priorityVehicles) {
+        this.priorityVehicles = priorityVehicles;
+    }
+
+    public int getVehicles() {
+        return vehicles;
+    }
+
+    public void setVehicles(int vehicles) {
+        this.vehicles = vehicles;
     }
 }

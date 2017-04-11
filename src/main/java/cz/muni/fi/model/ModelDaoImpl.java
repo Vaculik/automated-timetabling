@@ -5,7 +5,6 @@ import cz.muni.fi.model.perday.RouteModel;
 import cz.muni.fi.model.perperiod.TrafficModel;
 import cz.muni.fi.model.structural.StructuralModel;
 import cz.muni.fi.parser.JsonParser;
-import cz.muni.fi.parser.JsonParserImpl;
 import org.springframework.stereotype.Component;
 
 import java.io.FileInputStream;
@@ -23,8 +22,7 @@ public class ModelDaoImpl implements ModelDao {
         StructuralModel structuralModel = null;
         try {
             data = new FileInputStream("data/static/static_data.json");
-            JsonParser jsonParser = new JsonParserImpl(data);
-            structuralModel = jsonParser.parseStructuralModel();
+            structuralModel = JsonParser.createStructuralModelParser(data).parseStructuralModel();
         } catch (IOException | NullPointerException e) {
             e.printStackTrace();
         }
@@ -33,8 +31,7 @@ public class ModelDaoImpl implements ModelDao {
         RouteModel routeModel = null;
         try {
             data = new FileInputStream("data/route/2017-02-01.json");
-            JsonParser jsonParser = new JsonParserImpl(data);
-            routeModel = jsonParser.parseRouteModel();
+            routeModel = JsonParser.createRouteModelParser(data).parseRouteModel();
         } catch (IOException | NullPointerException e) {
             e.printStackTrace();
         }

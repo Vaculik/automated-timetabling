@@ -4,11 +4,15 @@ package cz.muni.fi;
 import cz.muni.fi.client.TimetablingClient;
 import cz.muni.fi.client.TimetablingClientImpl;
 import cz.muni.fi.dto.BusExample;
+import cz.muni.fi.model.ModelDao;
+import cz.muni.fi.model.perperiod.TrafficModel;
+import cz.muni.fi.parser.JsonParser;
 import cz.muni.fi.webapp.websocket.RefreshWebSocketController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 @Component
 public class TimetablingApp {
@@ -20,17 +24,20 @@ public class TimetablingApp {
     @Autowired
     private RefreshWebSocketController refreshWebSocketController;
 
+    @Autowired
+    private ModelDao modelDao;
+
     public TimetablingApp() {
         this.client = new TimetablingClientImpl(apiKey);
     }
 
     public void startProcessing() {
         System.out.println("START PROCESSING");
-        try {
-            this.client.getUpdate();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            this.client.getUpdate();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -41,7 +48,13 @@ public class TimetablingApp {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                busExample.move();
+                try {
+                    InputStream is = client.getUpdate();
+                    TrafficModel trafficModel = JsonParser.createTrafficModelParser(is).parseTrafficModel();
+                    modelDao.updateTrafficModel(trafficModel);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 refreshWebSocketController.sendRefreshMessage();
             }
         });
@@ -68,7 +81,7 @@ public class TimetablingApp {
 //        try {
 //            staticData = new FileInputStream("data/static/static_data.json");
 //            JsonParser jsonParser = new JsonParserImpl(staticData);
-//            model = jsonParser.parseStructuralModel();
+//            model = jsonParser.createStructuralModelParser();
 //        } catch (IOException | NullPointerException e) {
 //            e.printStackTrace();
 //        }

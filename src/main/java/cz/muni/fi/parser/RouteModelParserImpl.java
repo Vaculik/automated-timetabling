@@ -5,13 +5,12 @@ import cz.muni.fi.model.perday.CoordinatesInTimeCompBySequence;
 import cz.muni.fi.model.perday.Route;
 import cz.muni.fi.model.perday.RouteModel;
 import cz.muni.fi.model.perday.Trip;
-import cz.muni.fi.model.structural.dual.GeographicCoordinates;
+import cz.muni.fi.model.GeographicCoordinates;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;

@@ -1,4 +1,4 @@
-package cz.muni.fi.model.structural.dual;
+package cz.muni.fi.model;
 
 /**
  * Created by vacullik on 20/02/2017.

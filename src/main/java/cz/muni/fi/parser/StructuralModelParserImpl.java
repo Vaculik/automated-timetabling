@@ -3,7 +3,7 @@ package cz.muni.fi.parser;
 import cz.muni.fi.model.structural.StructuralModel;
 import cz.muni.fi.model.structural.dual.Arm;
 import cz.muni.fi.model.structural.dual.DualGraph;
-import cz.muni.fi.model.structural.dual.GeographicCoordinates;
+import cz.muni.fi.model.GeographicCoordinates;
 import cz.muni.fi.model.structural.dual.Site;
 import cz.muni.fi.model.structural.primal.Link;
 import cz.muni.fi.model.structural.primal.Node;

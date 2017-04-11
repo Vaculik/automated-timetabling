@@ -1,5 +1,7 @@
 package cz.muni.fi.model.structural.dual;
 
+import cz.muni.fi.model.GeographicCoordinates;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
