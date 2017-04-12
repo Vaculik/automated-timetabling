@@ -169,7 +169,13 @@ app.service('MapService', [
             for (let arm of site.arms) {
                 let armArrow = getArmLineCoords(site.coordinates, arm.armAngle);
                 let paintedArrow = paintArmLine(armArrow);
-                paintedArrow.bindPopup(arm.streetName);
+                let popup = `${arm.streetName}<br><br>
+Vehicles: ${arm.vehicles}<br>
+Vehicles ratio: ${arm.vehiclesRatio}<br>
+Priority vehicles: ${arm.priorityVehicles}<br>
+Priority vehicles ratio: ${arm.priorityVehiclesRatio}<br>
+Arrival vehicles: ${arm.arrivalVehicles}`;
+                paintedArrow.bindPopup(popup);
                 paintedArms.push(paintedArrow);
             }
             return paintedArms;

@@ -47,7 +47,7 @@ public class TimetablingClientImpl implements TimetablingClient {
         HttpResponse response = executeGetRequest("/getEvaluation");
 
         // TO DELETE - debug information
-        printDebugInfo(response);
+        //printDebugInfo(response);
 
         return response.getEntity().getContent();
     }
@@ -90,10 +90,6 @@ public class TimetablingClientImpl implements TimetablingClient {
         }
         result.append(System.lineSeparator());
         System.out.println("Post content : " + result.toString());
-    }
-
-    private void printDebugInfo(HttpGet request) throws IOException {
-
     }
 
     private void printDebugInfo(HttpResponse response) throws IOException {

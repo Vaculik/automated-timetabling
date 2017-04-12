@@ -54,6 +54,11 @@ public class ModelServiceImpl implements ModelService {
             Site nextSite = arm.getNextSite();
             if (nextSite != null) {
                 armDto.setNextSiteId(arm.getNextSite().getId());
+                armDto.setArrivalVehicles(arm.getArrivalVehicles());
+                armDto.setPriorityVehicles(arm.getPriorityVehicles());
+                armDto.setVehicles(arm.getVehicles());
+                armDto.setPriorityVehiclesRatio(arm.getPriorityVehiclesRatio());
+                armDto.setVehiclesRatio(arm.getVehiclesRatio());
             }
             armDtos.add(armDto);
         }
@@ -65,6 +70,7 @@ public class ModelServiceImpl implements ModelService {
         RouteModel routeModel = modelDao.getRouteModel();
         List<RouteDto> resultRoutes = new ArrayList<>();
         Set<String> routeIds = new HashSet<>();
+//        System.out.println("NUMBER OF TRIPS: " + routeModel.getTrips().size());
         for(Trip trip : routeModel.getTrips()) {
             String routeId = trip.getRoute().getId();
             if (routeIds.add(routeId)) {
