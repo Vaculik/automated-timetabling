@@ -3,9 +3,7 @@ package cz.muni.fi.model.structural;
 import cz.muni.fi.model.structural.dual.DualGraph;
 import cz.muni.fi.model.structural.primal.PrimalGraph;
 
-/**
- * Created by vacullik on 22/02/2017.
- */
+
 public class StructuralModel {
     private PrimalGraph primalGraph;
     private DualGraph dualGraph;

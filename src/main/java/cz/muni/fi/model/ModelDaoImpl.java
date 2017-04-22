@@ -1,6 +1,8 @@
 package cz.muni.fi.model;
 
 
+import cz.muni.fi.filter.SiteFilter;
+import cz.muni.fi.filter.SiteFilterByRoutes;
 import cz.muni.fi.model.perday.RouteModel;
 import cz.muni.fi.model.perperiod.TrafficModel;
 import cz.muni.fi.model.structural.StructuralModel;
@@ -36,6 +38,9 @@ public class ModelDaoImpl implements ModelDao {
             e.printStackTrace();
         }
         this.routeModel = routeModel;
+
+        SiteFilter siteFilter = new SiteFilterByRoutes(routeModel);
+        this.structuralModel.getDualGraph().filterSites(siteFilter);
     }
 
     @Override

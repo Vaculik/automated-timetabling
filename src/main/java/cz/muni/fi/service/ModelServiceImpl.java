@@ -69,13 +69,9 @@ public class ModelServiceImpl implements ModelService {
     public List<RouteDto> getAllRoutes() {
         RouteModel routeModel = modelDao.getRouteModel();
         List<RouteDto> resultRoutes = new ArrayList<>();
-        Set<String> routeIds = new HashSet<>();
 //        System.out.println("NUMBER OF TRIPS: " + routeModel.getTrips().size());
-        for(Trip trip : routeModel.getTrips()) {
-            String routeId = trip.getRoute().getId();
-            if (routeIds.add(routeId)) {
-                resultRoutes.add(makeRouteDtoFromTrip(trip));
-            }
+        for(Trip trip : routeModel.getTripsUniqueByRoute()) {
+            resultRoutes.add(makeRouteDtoFromTrip(trip));
         }
         return resultRoutes;
     }
