@@ -24,12 +24,13 @@ app.service('MapService', [
         let leafletRoutes = [];
         let leafletEdges = [];
         let leafletBuses = [];
+        let leafletLinks = [];
         let edgesMap = new Map();
 
         let busExampleOnMap = null;
 
         service.showSites = function(sites, options) {
-            let {withArms, withEdges} = options;
+            let {withArms, withEdges, withLinks} = options;
             for (let site of sites) {
                 let siteLayer = paintSite(site);
                 siteLayer.site = site;
@@ -42,6 +43,9 @@ app.service('MapService', [
             if (withEdges) {
                 service.showEdges();
             }
+            if (withLinks) {
+                Promise.resolve(ModelService.getAllLinks()).then((links) => service.showLinks(links));
+            }
         };
 
         service.hideSites = function() {
@@ -52,6 +56,7 @@ app.service('MapService', [
             }
             removePaintedItems(leafletSites);
             service.hideEdges();
+            service.hideLinks();
         };
 
         service.showRoutes = function(routes) {
@@ -104,6 +109,16 @@ app.service('MapService', [
         service.hideEdges = function() {
             removePaintedItems(leafletEdges);
             edgesMap.clear();
+        };
+
+        service.showLinks = function(links) {
+            ModelService.getSitesMap().then((sitesMap) => {
+                paintLinks(links, sitesMap);
+            });
+        };
+
+        service.hideLinks = function() {
+            removePaintedItems(leafletLinks);
         };
 
         service.showBuses = function(buses) {
@@ -196,12 +211,23 @@ Arrival vehicles: ${arm.arrivalVehicles}`;
             }
         }
 
-        function paintOneEdge(edgeCoords) {
+        function paintLinks(links, sitesMap) {
+            for (let link of links) {
+                let fromSite = sitesMap.get(link.firstSiteId);
+                let toSite = sitesMap.get(link.secondSiteId);
+                if (fromSite && toSite) {
+                    let linkCoords = getLinkCoords(fromSite, toSite);
+                    leafletLinks.push(paintOneEdge(linkCoords, 'orange'));
+                }
+            }
+        }
+
+        function paintOneEdge(edgeCoords, color) {
             let coords = [];
             coords.push(edgeCoords.fromPoint.getArrayCoords());
             coords.push(edgeCoords.toPoint.getArrayCoords());
             return L.polyline(coords, {
-                color: 'yellow',
+                color: color || 'yellow',
                 weight: 5,
             }).addTo(leafletMap);
         }
@@ -214,21 +240,30 @@ Arrival vehicles: ${arm.arrivalVehicles}`;
             }
         }
 
-        function getEdgeCoords(fromSite, arm, targetSite) {
-            let appropriateArm = targetSite.arms.find((arm) => arm.nextSiteId === fromSite.id);
+        function getEdgeCoords(fromSite, arm, toSite) {
+            let appropriateArm = toSite.arms.find((arm) => arm.nextSiteId === fromSite.id);
             let fromPoint = getArmPoint(fromSite, arm);
             if (appropriateArm) {
                 return {
                     fromPoint: fromPoint,
-                    toPoint: getArmPoint(targetSite, appropriateArm),
+                    toPoint: getArmPoint(toSite, appropriateArm),
                 };
             } else {
                 console.log('Appropriate arm not found.');
                 return {
                     fromPoint: fromPoint,
-                    toPoint: new Point(targetSite.coordinates.latitude, targetSite.coordinates.longitude),
+                    toPoint: new Point(toSite.coordinates.latitude, toSite.coordinates.longitude),
                 };
             }
+        }
+
+        function getLinkCoords(fromSite, toSite) {
+            let fromPoint = new Point(fromSite.coordinates.latitude, fromSite.coordinates.longitude);
+            let toPoint = new Point(toSite.coordinates.latitude, toSite.coordinates.longitude);
+            return {
+                fromPoint: fromPoint,
+                toPoint: toPoint,
+            };
         }
 
         function getArmPoint(site, arm) {

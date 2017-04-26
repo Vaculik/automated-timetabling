@@ -2,9 +2,7 @@ package cz.muni.fi.model.structural.primal;
 
 import java.util.*;
 
-/**
- * Created by vacullik on 09/02/2017.
- */
+
 public class PrimalGraph {
 
     private Map<Long, Node> nodes;

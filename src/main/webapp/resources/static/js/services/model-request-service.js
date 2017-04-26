@@ -26,6 +26,11 @@ app.service('ModelRequestService', [
             return processRequest('GET', relativeUrl);
         };
 
+        service.getAllLinks = function() {
+            let relativeUrl = '/links';
+            return processRequest('GET', relativeUrl);
+        };
+
 
         /**
          * Send an asynchronous HTTP request to the API.

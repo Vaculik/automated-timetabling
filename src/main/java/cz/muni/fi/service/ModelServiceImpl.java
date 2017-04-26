@@ -3,6 +3,7 @@ package cz.muni.fi.service;
 
 import cz.muni.fi.dto.ArmDto;
 import cz.muni.fi.dto.BusDto;
+import cz.muni.fi.dto.LinkDto;
 import cz.muni.fi.dto.RouteDto;
 import cz.muni.fi.dto.SiteDto;
 import cz.muni.fi.model.ModelDao;
@@ -15,13 +16,13 @@ import cz.muni.fi.model.structural.dual.Arm;
 import cz.muni.fi.model.structural.dual.DualGraph;
 import cz.muni.fi.model.GeographicCoordinates;
 import cz.muni.fi.model.structural.dual.Site;
+import cz.muni.fi.model.structural.primal.Link;
+import cz.muni.fi.model.structural.primal.PrimalGraph;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Component
 public class ModelServiceImpl implements ModelService {
@@ -95,5 +96,17 @@ public class ModelServiceImpl implements ModelService {
             resultBuses.add(busDto);
         }
         return resultBuses;
+    }
+
+    public List<LinkDto> getAllLinks() {
+        List<LinkDto> resultLinks = new ArrayList<>();
+        PrimalGraph primalGraph = modelDao.getStructuralModel().getPrimalGraph();
+        for (Link link : primalGraph.getAllLinks()) {
+            LinkDto linkDto = new LinkDto();
+            linkDto.setFirstSiteId(link.getFirstNode().getKey());
+            linkDto.setSecondSiteId(link.getSecondNode().getKey());
+            resultLinks.add(linkDto);
+        }
+        return resultLinks;
     }
 }

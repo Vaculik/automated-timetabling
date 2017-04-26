@@ -14,16 +14,19 @@ app.controller('appController', [
         $scope.armsVisible = false;
         $scope.busVisible = false;
         $scope.busesVisible = false;
+        $scope.edgesVisible = false;
+        $scope.linksVisible = false;
 
         init();
 
         $scope.toggleSitesVisibility = function() {
             $scope.sitesVisible = !$scope.sitesVisible;
             if ($scope.sitesVisible) {
-                ModelService.getAllSites().then((sites) => {
+                Promise.resolve(ModelService.getAllSites()).then((sites) => {
                     let options = {
                         withArms: $scope.armsVisible,
                         withEdges: $scope.edgesVisible,
+                        withLinks: $scope.linksVisible,
                     };
                     MapService.showSites(sites, options);
                 });
@@ -35,9 +38,9 @@ app.controller('appController', [
         $scope.toggleRoutesVisibility = function() {
             $scope.routesVisible = !$scope.routesVisible;
             if ($scope.routesVisible) {
-                ModelService.getAllRoutes().then((routes) => {
+                Promise.resolve(ModelService.getAllRoutes()).then((routes) => {
                     MapService.showRoutes(routes);
-                })
+                });
             } else {
                 MapService.hideRoutes();
             }
@@ -58,6 +61,19 @@ app.controller('appController', [
                 MapService.showEdges();
             } else {
                 MapService.hideEdges();
+            }
+        };
+
+        $scope.toggleLinksVisibility = function() {
+            $scope.linksVisible = !$scope.linksVisible;
+            if ($scope.linksVisible) {
+                if ($scope.sitesVisible) {
+                    Promise.resolve(ModelService.getAllLinks()).then((links) => {
+                        MapService.showLinks(links);
+                    });
+                }
+            } else {
+                MapService.hideLinks();
             }
         };
 
